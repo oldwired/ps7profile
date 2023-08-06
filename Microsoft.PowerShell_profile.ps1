@@ -1,4 +1,3 @@
-
 # Basic settings
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal(
     [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -41,13 +40,14 @@ Set-Alias -Name ipv6 -Value fIPv6
 function prompt {
     $dir = Get-Location
     $branch = $(git branch 2> $null | foreach-object {if ($_ -match "^\*.*") {$_.replace("* ","")}})
-    if ($isAdmin) {
-        Write-Host "`#" -NoNewline -ForegroundColor Red
-        Write-Host "$($dir) [$($branch)]`n⇲" -NoNewline -ForegroundColor Red
-    } else {
-        Write-Host "$" -NoNewline -ForegroundColor Green
-        Write-Host "$($dir) [$($branch)]`n⇲" -NoNewline -ForegroundColor Green
-    }    
+    $status = $(git status --porcelain 2> $null)
+    $promptColor = if ($isAdmin) { "Red" } else { "Green" }
+    $statusColor = if ($status) { "Yellow" } else { "Green" }    
+    $promptSign = if ($isAdmin) { "🤖" } else { "🦚" }
+    Write-Host "$($promptSign)" -NoNewline -ForegroundColor $promptColor 
+    Write-Host "$($dir) [" -NoNewline -ForegroundColor $promptColor 
+    Write-Host "$($branch)" -NoNewline -ForegroundColor $statusColor 
+    Write-Host "]`n⇲" -NoNewline -ForegroundColor $promptColor 
 
     $host.UI.RawUI.WindowTitle = "PS $((Get-Location).Path)"
 
