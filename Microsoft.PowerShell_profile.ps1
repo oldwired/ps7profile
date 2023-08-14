@@ -5,10 +5,10 @@ $currentPrincipal = New-Object Security.Principal.WindowsPrincipal(
 $isAdmin = $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
 # Functions and Aliases
-Function fMP3 {c:\yt\yt-dlp.exe -x --audio-format mp3}
+Function fMP3 ($url) { & 'c:\yt\yt-dlp.exe' -x --audio-format mp3 $url}
 Set-Alias -Name mp3 -Value fMP3
 
-Function fWAV {c:\yt\yt-dlp.exe -x --audio-format wav}
+Function fWAV ($url) { & 'c:\yt\yt-dlp.exe' -x --audio-format wav $url}
 Set-Alias -Name wav -Value fWAV
 
 Function fYT {
@@ -66,5 +66,5 @@ Write-Host "Execution policy: $(Get-ExecutionPolicy)" -ForegroundColor Yellow
 if ($isAdmin) {
     Write-Host "PowerShell is running as admin."  -ForegroundColor Red
 } else {
-    Write-Host "PowerShell is not running as admin."  -ForegroundColor Green
+    Write-Host "PowerShell is running as user."  -ForegroundColor Green
 } 
